@@ -8,7 +8,10 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    histogram1d.cpp
+    histogram1d.cpp \
+    colorhistogram.cpp \
+    contentfinder.cpp \
+    imagecomparator.cpp
 
 INCLUDEPATH += /usr/local/include \
                /usr/local/include/opencv \
@@ -26,4 +29,7 @@ LIBS += /usr/local/lib/libopencv_video.so  \
   /usr/local/lib/libopencv_imgcodecs.so
 
 HEADERS += \
-    histogram1d.h
+    histogram1d.h \
+    colorhistogram.h \
+    contentfinder.h \
+    imagecomparator.h

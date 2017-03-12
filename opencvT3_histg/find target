@@ -1,0 +1,69 @@
+//5.均值漂移法 查找物体-Mean shift to find target
+/*
+    cv::Rect rect(110,260,35,40);// target area
+    cv::Mat imageROI=image(rect);// get baboon's face
+    cv::rectangle(image,rect,cv::Scalar(0,255,0));
+    cv::namedWindow("src");
+    cv::imshow("src",image);
+
+    int minSat = 65;
+    ColorHistogram hcc;
+    cv::MatND colorhist=hcc.getHueHistogram(imageROI,minSat);
+
+    cv::Mat image1=cv::imread("../TestPic/baboon3.jpg",1);
+    cv::Mat hsv;
+    std::vector<cv::Mat> v;
+    cv::cvtColor(image1,hsv,CV_BGR2HSV); //change color space
+    cv::split(hsv,v);
+    cv::threshold(v[1],v[1],minSat,255,cv::THRESH_BINARY); // threshold to the binary image(only two-value)
+
+    //cv::namedWindow("hsv");
+    //cv::imshow("hsv",v[1]);  //OK
+
+    ContentFinder finder;
+    finder.setThreshold(0.05f);
+    finder.setHistogram(colorhist);//归一化直方图，得到特定像素属于某个区域的概率图
+    cv::Mat result=finder.find(hsv,0.0f,180.0f,hcc.channels,1);//反投影，阈值化 finder.channels
+
+    //去除低相似度概率的像素们
+    cv::bitwise_and(result,v[1],result); //reduce low-saturation pixel
+
+    cv::rectangle(image1,rect,cv::Scalar(0,125,0)); //draw rect in src
+
+    //cv::namedWindow("imageRec");
+    // cv::imshow("imageRec",image1);//ok
+
+    // (criteria,maximum number of iterations,accuracy)
+    cv::TermCriteria criteria(cv::TermCriteria::MAX_ITER,10,0.01);
+    cv::meanShift(result,rect,criteria);//得到相似度最高的区域rect
+
+    cv::rectangle(image1,rect,cv::Scalar(0,0,255));//draw rect-finding in src
+    cv::namedWindow("image1res");
+    cv::imshow("image1res",image1);
+*/
+   //6.比较直方图检索相似图像 cv::compareHist to find similar pic
+    cv::Mat imagesrc= cv::imread("../TestPic/baboon1.jpg",1);   // cow sky
+    cv::Mat imagedst1= cv::imread("../TestPic/baboon4.jpg",1);
+    cv::Mat imagedst2= cv::imread("../TestPic/cow.jpg",1);
+    cv::Mat imagedst3= cv::imread("../TestPic/sky.jpg",1);       // cow sky
+
+    cv::namedWindow("imagesrc");
+    cv::imshow("imagesrc",imagesrc);
+    cv::namedWindow("imagedst1");
+    cv::imshow("imagedst1",imagedst1);
+    cv::namedWindow("imagedst2");
+    cv::imshow("imagedst2",imagedst2);
+    cv::namedWindow("imagedst3");
+    cv::imshow("imagedst3",imagedst3);
+
+    ImageComparator c;
+    c.setColorReduction(50);
+    c.setReferenceImage(imagesrc);
+    double res1_double=c.compare(imagedst1);
+    double res2_double=c.compare(imagedst2);
+    double res3_double=c.compare(imagedst3);
+
+    cout << "res1" << "=" <<res1_double << "\n"
+         << "res2" << "=" <<res2_double << "\n"
+         << "res3" << "=" <<res3_double  << endl;
+
